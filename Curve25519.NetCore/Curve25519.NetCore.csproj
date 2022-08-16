@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Timothy D Meadows II</Authors>
     <Description>An elliptic curve offering 128 bits of security and designed for use with the elliptic curve Diffie–Hellman (ECDH) key agreement scheme. It is one of the fastest ECC curves and is not covered by any known patents.</Description>
@@ -9,11 +8,9 @@
     <PackageProjectUrl>https://github.com/TimothyMeadows/Curve25519.NetCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TimothyMeadows/Curve25519.NetCore</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
+    <LangVersion>7.3</LangVersion>
+    <TargetFrameworks>net5.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1</TargetFrameworks>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SecureRandom.NetCore" Version="1.0.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">
