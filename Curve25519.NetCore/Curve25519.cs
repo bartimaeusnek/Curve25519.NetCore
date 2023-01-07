@@ -110,19 +110,15 @@ namespace Curve25519.NetCore
     {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         Span<byte> privateKey = stackalloc byte[32];
+        RandomNumberGenerator.Fill(privateKey);
+        ClampPrivateKeyInline(privateKey);
+        return privateKey.ToArray();
 #else
         byte[] privateKey = new byte[32];
-#endif
-        
-        var rng        = RandomNumberGenerator.Create();
+        var rng = RandomNumberGenerator.Create();
         rng.GetBytes(privateKey);
         ClampPrivateKeyInline(privateKey);
-        return privateKey
-        
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-         .ToArray();
-#else
-        ;
+        return privateKey;
 #endif
     }
 

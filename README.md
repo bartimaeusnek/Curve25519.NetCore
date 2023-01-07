@@ -1,26 +1,26 @@
 # Curve25519.NetCore
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![nuget](https://img.shields.io/nuget/v/Curve25519.NetCore.svg)](https://www.nuget.org/packages/Curve25519.NetCore/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![nuget](https://img.shields.io/nuget/v/Curve25519.NetCore.Updated.svg)](https://www.nuget.org/packages/Curve25519.NetCore.Updated/)
 
-An elliptic curve offering 128 bits of security and designed for use with the elliptic curve Diffie–Hellman (ECDH) key agreement scheme. It is one of the fastest ECC curves and is not covered by any known patents. Depends on [SecureRandom.NetCore](https://github.com/TimothyMeadows/SecureRandom.NetCore)
+### Updated version of [this project!](https://github.com/TimothyMeadows/Curve25519.NetCore)
+
+An elliptic curve offering 128 bits of security and designed for use with the elliptic curve Diffie–Hellman (ECDH) key agreement scheme. It is one of the fastest ECC curves and is not covered by any known patents. This Updated version does not depend on [SecureRandom.NetCore](https://github.com/TimothyMeadows/SecureRandom.NetCore) anymore.
 
 # Install
 
 From a command prompt
-```bash
-dotnet add package Curve25519.NetCore
+```
+dotnet add package Curve25519.NetCore.Updated
 ```
 
-```bash
-Install-Package Curve25519.NetCore
+```
+Install-Package Curve25519.NetCore.Updated
 ```
 
 You can also search for package via your nuget ui / website:
 
-https://www.nuget.org/packages/Curve25519.NetCore/
+https://www.nuget.org/packages/Curve25519.NetCore.Updated/
 
 # Examples
-
-You can find more examples in the github examples project.
 
 ```csharp
 var curve25519 = new Curve25519();
