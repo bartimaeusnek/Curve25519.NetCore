@@ -3,7 +3,11 @@
 
 ### Updated version of [this project!](https://github.com/TimothyMeadows/Curve25519.NetCore)
 
-An elliptic curve offering 128 bits of security and designed for use with the elliptic curve Diffie–Hellman (ECDH) key agreement scheme. It is one of the fastest ECC curves and is not covered by any known patents. This Updated version does not depend on [SecureRandom.NetCore](https://github.com/TimothyMeadows/SecureRandom.NetCore) anymore.
+An elliptic curve offering 128 bits of security and designed for use with the elliptic curve Diffie–Hellman (ECDH) key agreement scheme.
+It is one of the fastest ECC curves and is not covered by any known patents. 
+
+This Updated version does not depend on [SecureRandom.NetCore](https://github.com/TimothyMeadows/SecureRandom.NetCore) anymore,
+but uses either the build-in SecureRandom or the Random function of your TPM module, with software fallback (configurable).
 
 # Install
 

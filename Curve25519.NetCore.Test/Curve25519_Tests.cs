@@ -3,12 +3,18 @@ using NUnit.Framework;
 
 namespace Curve25519.NetCore.Examples;
 
-internal class Curve25519_Tests
+internal class Curve25519Tests
 {
-    [Test]
-    public void TestEquality()
+    [DatapointSource]
+    public bool[] NShouldUseTpm = {
+        true,
+        false
+    };
+    
+    [Theory]
+    public void TestEquality(bool tpm)
     {
-        var curve25519   = new Curve25519();
+        using var curve25519 = new Curve25519(tpm);
         
         var alicePrivate = curve25519.CreateRandomPrivateKey();
         var alicePublic  = curve25519.GetPublicKey(alicePrivate);

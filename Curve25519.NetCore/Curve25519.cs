@@ -1,4 +1,6 @@
-﻿/* Refactored for .NET Core, and SecureRandom.NetCore to 'patch' with timing issues by Timothy D Meadows II, 28/08/2020 */
+﻿/* Changes made by bartimaeusnek are viewable in the git history*/
+
+/* Refactored for .NET Core, and SecureRandom.NetCore to 'patch' with timing issues by Timothy D Meadows II, 28/08/2020 */
 
 /* Ported parts from Java to C# and refactored by Hans Wolff, 17/09/2013 */
 
@@ -18,8 +20,20 @@ using System.Security.Cryptography;
 
 namespace Curve25519.NetCore
 {
-    public class Curve25519
+    public class Curve25519 : IDisposable
     {
+        private readonly bool _shouldUseTmp2;
+        private readonly TPM2Wrapper _tpm2;
+        
+        public Curve25519(bool shouldUseTPM2ForRandomGeneration = true)
+        {
+            _shouldUseTmp2 = shouldUseTPM2ForRandomGeneration;
+            if (_shouldUseTmp2)
+            {
+                _tpm2 = new TPM2Wrapper();
+            }
+        }
+        
         /// <summary>
         /// Smallest multiple of the order that's >= 2^255
         /// </summary>
@@ -108,18 +122,36 @@ namespace Curve25519.NetCore
     /// <returns>32 random bytes that are clamped to a suitable private key</returns>
     public byte[] CreateRandomPrivateKey()
     {
+        const int privateKeySize = 32;
+        byte[] privateKey;
+        
+        if (_shouldUseTmp2 == false)
+        {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-        Span<byte> privateKey = stackalloc byte[32];
-        RandomNumberGenerator.Fill(privateKey);
-        ClampPrivateKeyInline(privateKey);
-        return privateKey.ToArray();
+            Span<byte> privateKeyNoTpm = stackalloc byte[privateKeySize];
+            RandomNumberGenerator.Fill(privateKeyNoTpm);
+            ClampPrivateKeyInline(privateKeyNoTpm);
+            return privateKeyNoTpm.ToArray();
 #else
-        byte[] privateKey = new byte[32];
-        var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(privateKey);
+            privateKey = new byte[privateKeySize];
+            var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(privateKey);
+            ClampPrivateKeyInline(privateKey);
+            return privateKey;
+#endif
+        }
+        
+        if (_tpm2.TryGetRandom(privateKeySize, out privateKey) == false)
+        {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+            RandomNumberGenerator.Fill(privateKey);
+#else
+            var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(privateKey);
+#endif
+        }
         ClampPrivateKeyInline(privateKey);
         return privateKey;
-#endif
     }
 
     /// <summary>
@@ -902,5 +934,24 @@ namespace Curve25519.NetCore
                 MultiplyArraySmall(signingKey, signingKey, 0, _order, 32, 1);
         }
     }
-}
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _tpm2?.Dispose();
+        }
+    }
+    
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~Curve25519()
+    {
+        Dispose(false);
+    }
+    }
 }
